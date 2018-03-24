@@ -9,6 +9,7 @@ execute to process annotations.
 Installation
 -------------
 ::
-    sudo pip3 install -e git+git://github.com/Sentimentron/pyannotatron.git#egg=pyannotatron
+
+  sudo pip3 install -e git+git://github.com/Sentimentron/pyannotatron.git#egg=pyannotatron
 
 .. _annotatron: https://github.com/Sentimentron/annotatron
