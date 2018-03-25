@@ -1,4 +1,5 @@
 import requests
+import datetime
 import copy
 import base64
 import hashlib
@@ -255,16 +256,15 @@ class Asset:
 
 
     @classmethod
-    def from_json(cls, dict, corpus=None):
+    def from_json(cls, d):
         """
         Constructs a new Asset from its remote representation.
-        :param dict: The JSON to parse.
+        :param d: The JSON to parse.
         :return: The constructed Asset.
         """
-        dict = copy.deepcopy(dict)
-        dict['content'] = base64.standard_b64decode(dict['content'])
-        dict['corpus'] = corpus
-        return Asset(**dict)
+        d = copy.deepcopy(d)
+        d['content'] = base64.standard_b64decode(d['content'])
+        return Asset(**d)
 
 
 class SkinnyAsset(Asset):
@@ -296,7 +296,7 @@ class Annotation:
         to a question.
     """
 
-    def __init__(self, summary_code: str, data: object, kind: str, source: str, metadata: object=None):
+    def __init__(self, summary_code: str, data: object, kind: str, source: str, metadata: object=None, created: datetime.datetime=datetime.datetime.now(), annotator:int=None):
         """
         Create an Annotation object, which tells us something about an Asset.
         :param summary_code: This is used to group and summarize responses from multiple annotators.
@@ -304,6 +304,8 @@ class Annotation:
         :param kind: e.g. "text", "segmentation_1d", "range_1d" etc.
         :param source: Either "reference" or "human"
         :param metadata: Anything that's not directly related to the annotation's data (JSON-serializable).
+        :param created: When this object was created.
+        :param annotator: The system name of the person who created the annotation.
         """
 
         self.summary_code = summary_code
@@ -311,6 +313,8 @@ class Annotation:
         self.kind = kind
         self.source = source
         self.metadata = metadata
+        self.created = created
+        self.annotator = annotator
 
     def check_for_problems(self) -> (bool, list):
         """
@@ -369,7 +373,10 @@ class Annotation:
 
     @classmethod
     def from_json(cls, js):
-        return cls(**js)
+        js.pop('id', None)
+        js.pop('asset', None)
+        js["created"] = datetime.datetime.strptime(js["created"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        return Annotation(**js)
 
 
 class QuestionPlaceHolder:

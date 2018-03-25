@@ -67,6 +67,9 @@ class TestCorpus(TestCase):
 
         self.assertEqual(a.content, single_file.content)
 
+        a = an.get_asset_from_corpus(corpus, "test_2")
+        self.assertEqual(a.content, single_file.content)
+
     def test_upload_and_check(self):
         corpus = Corpus("debug-sample-corpus", "An example corpus")
         an = Annotatron(url(''), auth=self.auth)

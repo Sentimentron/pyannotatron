@@ -62,34 +62,16 @@ class TestAnnotation(TestCase):
         b = self.an.add_annotation_to_asset(self.corpus, self.a, a)
         self.assertEqual(a, b)
 
-        entries = self.an.retrieve_asset_annotations(self.corpus, self.a)
-        self.assertTrue("reference" in entries)
+        entries = self.an.get_annotations_from_asset(self.corpus, self.a)
+        self.assertTrue("TRANSCRIPT" in entries)
         self.assertEqual(len(entries), 1)
 
-        reference_annotations = entries["reference"]
-        self.assertTrue("TRANSCRIPT" in reference_annotations)
-        self.assertEqual(len(reference_annotations), 1)
-
-        annotations = reference_annotations["TRANSCRIPT"]
+        annotations = entries["TRANSCRIPT"]
+        print(entries)
+        self.assertTrue("reference" in annotations)
         self.assertEqual(len(annotations), 1)
 
-        annotation = annotations[0]
-        self.assertEqual(annotation.data, "This is an example")
-
-    def test_upload_system(self):
-        a = Annotation("TRANSCRIPT", "This is an example", "text", "system")
-        b = self.an.add_annotation_to_asset(self.a, a)
-        self.assertEqual(a, b)
-
-        entries = self.an.retrieve_asset_annotations(self.corpus, self.a)
-        self.assertTrue("system" in entries)
-        self.assertEqual(len(entries), 1)
-
-        reference_annotations = entries["reference"]
-        self.assertTrue("TRANSCRIPT" in reference_annotations)
-        self.assertEqual(len(reference_annotations), 1)
-
-        annotations = reference_annotations["TRANSCRIPT"]
+        annotations = annotations["reference"]
         self.assertEqual(len(annotations), 1)
 
         annotation = annotations[0]
