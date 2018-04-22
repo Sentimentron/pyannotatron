@@ -1,7 +1,7 @@
 import datetime
 from enum import Enum
 
-from .utils import generic_from_json, generic_to_json, parse_json_date, date_to_json
+from .utils import generic_from_json, generic_to_json, parse_json_date, date_to_json, base64_to_bytes, bytes_to_base64
 
 
 class AnnotatronMixin:
@@ -166,19 +166,18 @@ class TimeSeriesSegmentationAnnotation(AbstractAnnotation):
 
     MAP = {
         "summaryCode": "summary_code",
-        "source": ("source", lambda x: AnnotationSource(x)),
-        "kind": ("kind", lambda x: AnnotationKind(x))
+        "source": ("source", lambda x: AnnotationSource(x), lambda x: x.value),
+        "kind": ("kind", lambda x: AnnotationKind(x), lambda x: x.value),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x))
     }
 
     @classmethod
     def from_json(cls, json_dict):
-        assert AnnotationKind(json_dict["kind"]) == AnnotationKind.TIME_SERIES_SEGMENTATION
         return cls(**generic_from_json(json_dict, cls.MAP))
 
     def to_json(self):
         assert self.kind == AnnotationKind.TIME_SERIES_SEGMENTATION
         ret = generic_to_json(self.__dict__, self.MAP)
-        ret["kind"] = AnnotationKind.TIME_SERIES_SEGMENTATION
         return ret
 
 
@@ -201,16 +200,16 @@ class TimeSeriesRangeTuple(AnnotatronMixin):
 
 class TimeSeriesRangeAnnotation(AbstractAnnotation):
     def __init__(self, created: datetime, source: AnnotationSource, summary_code: str,
-                 segments: list, annotations: list, kind=AnnotationKind.TIME_SERIES_RANGE):
+                 ranges: list, kind=AnnotationKind.TIME_SERIES_RANGE):
         super().__init__(created, source, kind, summary_code)
-        self.segments = segments
-        self.annotations = annotations
+        self.ranges = ranges
 
     MAP = {
         "summaryCode": "summary_code",
-        "source": ("source", lambda x: AnnotationSource(x)),
-        "kind": ("kind", lambda x: AnnotationKind(x)),
-        "range": ("range", lambda x: TimeSeriesRangeTuple.convert_from_json_list(x),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "source": ("source", lambda x: AnnotationSource(x), lambda x: x.value),
+        "kind": ("kind", lambda x: AnnotationKind(x), lambda x: x.value),
+        "ranges": ("ranges", lambda x: TimeSeriesRangeTuple.convert_from_json_list(x),
                   lambda x: TimeSeriesRangeTuple.convert_to_json_list(x))
     }
 
@@ -222,7 +221,6 @@ class TimeSeriesRangeAnnotation(AbstractAnnotation):
     def to_json(self):
         assert self.kind == AnnotationKind.TIME_SERIES_RANGE
         ret = generic_to_json(self.__dict__, self.MAP)
-        ret["kind"] = AnnotationKind.TIME_SERIES_RANGE
         return ret
 
 
@@ -236,6 +234,7 @@ class GenericJSONAnnotation(AbstractAnnotation):
         "summaryCode": "summary_code",
         "source": ("source", lambda x: AnnotationSource(x), lambda x: x.value),
         "kind": ("kind", lambda x: AnnotationKind(x), lambda x: x.value),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
     }
 
     @classmethod
@@ -259,6 +258,7 @@ class MultipleChoiceAnnotation(AbstractAnnotation):
         "summaryCode": "summary_code",
         "source": ("source", lambda x: AnnotationSource(x), lambda x: x.value),
         "kind": ("kind", lambda x: AnnotationKind(x), lambda x: x.value),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
     }
 
     @classmethod
@@ -273,25 +273,24 @@ class MultipleChoiceAnnotation(AbstractAnnotation):
 
 class TextAnnotation(AbstractAnnotation):
     def __init__(self, created: datetime, source: AnnotationSource, summary_code: str,
-                 choices: list, kind=AnnotationKind.MULTIPLE_CHOICE):
+                 content: str, kind=AnnotationKind.MULTIPLE_CHOICE):
         super().__init__(created, source, kind, summary_code)
-        self.choices = choices
+        self.content = content
 
     MAP = {
         "summaryCode": "summary_code",
-        "source": ("source", lambda x: AnnotationSource(x)),
-        "kind": ("kind", lambda x: AnnotationKind(x)),
+        "source": ("source", lambda x: AnnotationSource(x), lambda x: x.value),
+        "kind": ("kind", lambda x: AnnotationKind(x), lambda x: x.value),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x))
     }
 
     @classmethod
     def from_json(cls, json_dict):
-        assert AnnotationKind(json_dict["kind"]) == AnnotationKind.GENERIC_JSON
         return cls(**generic_from_json(json_dict, cls.MAP))
 
     def to_json(self):
-        assert self.kind == AnnotationKind.GENERIC_JSON
+        assert self.kind == AnnotationKind.TEXT
         ret = generic_to_json(self.__dict__, self.MAP)
-        ret["kind"] = AnnotationKind.GENERIC_JSON
         return ret
 
 
@@ -388,10 +387,11 @@ class BinaryAsset(AnnotatronMixin):
 
     MAP = {
         "userIdWhoUploaded": "uploader_id",
-        "dateUploaded": "date_uploaded",
+        "dateUploaded": ("date_uploaded", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "copyrightAndUsageRestrictions": "copyright",
+        "content": ("content", lambda x: base64_to_bytes(x), lambda x: bytes_to_base64(x)),
         "mimeType": "mime_type",
-        "typeDescription": ("type_description", lambda x: BinaryAssetKind(x))
+        "typeDescription": ("type_description", lambda x: BinaryAssetKind(x), lambda x: x.value)
     }
 
 

@@ -1,6 +1,6 @@
 import os
 import datetime
-
+import base64
 
 def parse_json_date(input):
     if type(input) == datetime.datetime:
@@ -12,6 +12,14 @@ def parse_json_date(input):
 def date_to_json(input: datetime.datetime):
     # TODO: timezones
     return input.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+def base64_to_bytes(input: str) -> bytes:
+    return base64.b64decode(input)
+
+
+def bytes_to_base64(input: bytes) -> str:
+    return base64.b64encode(input).decode("utf8")
 
 
 def generic_from_json(json_dict, mapping_dict):
