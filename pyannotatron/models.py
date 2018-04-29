@@ -451,9 +451,10 @@ class DataLossReason(Enum):
 
 
 class FieldError(AnnotatronMixin):
-    def __init__(self, name, error):
+    def __init__(self, name, error, warning=False):
         self.name = name
         self.error = error
+        self.warning = warning
 
 
 class SuccessfulInsert(AnnotatronMixin):
