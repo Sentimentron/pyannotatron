@@ -395,7 +395,7 @@ class BinaryAsset(AnnotatronMixin):
     }
 
 
-class ConfigurationResponse:
+class ConfigurationResponse(AnnotatronMixin):
     """
         Contains information about whether Annotatron's ready to use, or whether it requires
         further information.
