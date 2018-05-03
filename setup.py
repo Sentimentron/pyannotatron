@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='pyannotatron',
-    version='0.2.0',
+    version='0.2.1',
     description='Python bindings for Annotatron - a data management system for machine learning applications',
     long_description=long_description,
     url='https://github.com/Sentimentron/pyannotatron',
@@ -22,7 +22,7 @@ setup(
         'Programming Language :: Python :: 3.4'
    ],
    keywords='ml database',
-   py_modules=['pyannotatron'],
+   py_modules=['pyannotatron.models'],
    install_requires=['requests'],
    project_urls={
     'Bug Reports': 'https://github.com/Sentimentron/pyannotatron/issues',

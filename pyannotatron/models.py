@@ -39,6 +39,11 @@ class AnnotationKind(Enum):
     GENERIC_JSON = "GenericJSONAnnotation"
     TEXT = "TextAnnotation"
 
+class UserKind(Enum):
+    ADMINISTRATOR = "Administrator"
+    STAFF = "Staff"
+    REVIEWER = "Reviewer"
+    ANNOTATOR = "Annotator"
 
 class AbstractAnnotation:
     """
@@ -465,7 +470,6 @@ class SuccessfulInsert(AnnotatronMixin):
         "insertedId": "id"
     }
 
-
 class Question:
     """
         Factory class that returns AbstractQuestion subclasses.
@@ -479,3 +483,40 @@ class Question:
     @classmethod
     def from_json(cls, json_dict):
         return cls.CONVERSION_TABLE[QuestionKind(json_dict['kind'])].from_json(json_dict)
+
+
+class NewUserRequest(AnnotatronMixin):
+    MAP = {
+        "role": ("role", lambda x: UserKind(x), lambda x: x.value)
+    }
+
+
+class FieldError(AnnotatronMixin):
+
+    def __init__(self, name: str, error: str, warning: bool):
+        self.name = name
+        self.error = error
+        self.warning = warning
+
+
+class ValidationError:
+
+    def __init__(self, errors):
+        self.errors = errors
+
+    def __iter__(self):
+        for err in self.errors:
+            yield err
+
+    @classmethod
+    def from_json(cls, json):
+        ret = []
+        for item in json:
+            ret.append(FieldError.from_json(item))
+        return cls(ret)
+
+    def to_json(self):
+        ret = []
+        for item in self:
+            ret.append(item.to_json())
+        return ret
