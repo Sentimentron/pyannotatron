@@ -526,3 +526,8 @@ class ValidationError:
         for item in self:
             ret.append(item.to_json())
         return ret
+
+class LoginResponse(AnnotatronMixin):
+
+    def __init__(self, token):
+        self.token = token
