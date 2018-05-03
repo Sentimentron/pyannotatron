@@ -531,3 +531,9 @@ class LoginResponse(AnnotatronMixin):
 
     def __init__(self, token):
         self.token = token
+
+class LoginRequest(AnnotatronMixin):
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
