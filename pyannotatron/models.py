@@ -490,6 +490,12 @@ class NewUserRequest(AnnotatronMixin):
         "role": ("role", lambda x: UserKind(x), lambda x: x.value)
     }
 
+    def __init__(self, username, email, role, password):
+        self.username = username
+        self.email = email
+        self.role = role
+        self.password = password
+
 
 class FieldError(AnnotatronMixin):
 
