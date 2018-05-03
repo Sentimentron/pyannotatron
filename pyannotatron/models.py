@@ -537,3 +537,18 @@ class LoginRequest(AnnotatronMixin):
     def __init__(self, username, password):
         self.username = username
         self.password = password
+
+
+class AnnotatronUser(AnnotatronMixin):
+    MAP = {
+        "role": ("role", lambda x: UserKind(x), lambda x: x.value),
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x))
+    }
+
+    def __init__(self, username, email, role, password, created, id):
+        self.username = username
+        self.email = email
+        self.role = role
+        self.password = password
+        self.created = created
+        self.id = id
