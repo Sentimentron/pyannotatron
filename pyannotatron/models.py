@@ -470,6 +470,7 @@ class SuccessfulInsert(AnnotatronMixin):
         "insertedId": "id"
     }
 
+
 class Question:
     """
         Factory class that returns AbstractQuestion subclasses.
@@ -527,10 +528,16 @@ class ValidationError:
             ret.append(item.to_json())
         return ret
 
-class LoginResponse(AnnotatronMixin):
 
-    def __init__(self, token):
+class LoginResponse(AnnotatronMixin):
+    MAP = {
+        "passwordResetNeeded": "password_reset_needed"
+    }
+
+    def __init__(self, token: str, password_reset_needed: bool):
         self.token = token
+        self.password_reset_needed = password_reset_needed
+
 
 class LoginRequest(AnnotatronMixin):
 
@@ -545,10 +552,9 @@ class AnnotatronUser(AnnotatronMixin):
         "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x))
     }
 
-    def __init__(self, username, email, role, password, created, id):
+    def __init__(self, username, email, role, created, id):
         self.username = username
         self.email = email
         self.role = role
-        self.password = password
         self.created = created
         self.id = id

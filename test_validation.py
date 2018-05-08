@@ -40,7 +40,7 @@ class TestValidationError(TestCase):
             "warning": False
         }]
 
-        self.assertEquals(ve.to_json(), ref)
+        self.assertEqual(ve.to_json(), ref)
 
     def test_from_json(self):
         ref = [{
