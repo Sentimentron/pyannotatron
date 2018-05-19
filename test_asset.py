@@ -32,7 +32,7 @@ class TestAsset(TestCase):
             "userIdWhoUploaded": 5,
             "content": "aGVsbG8gd29ybGQ=",
             "metadata": {
-                "aribtraryKey": "arbitraryValue"
+                "arbitraryKey": "arbitraryValue"
             },
             "dateUploaded": "2018-04-23T18:25:43.511000Z",
             "copyrightAndUsageRestrictions": "No redistribution",
