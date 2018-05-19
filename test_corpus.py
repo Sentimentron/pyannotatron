@@ -6,7 +6,6 @@ class TestCorpus(TestCase):
 
     def test_corpus(self):
         input_json = {
-            "id": 7,
             "name": "VCTK",
             "description": "Contains short utterances from multiple speakers",
             "created": "2018-04-23T18:25:43.511000Z",

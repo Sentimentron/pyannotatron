@@ -370,6 +370,32 @@ class BinaryAssetKind(Enum):
     OTHER = "Other"
 
 
+class BinaryAssetDescription(AnnotatronMixin):
+    """
+        Represents Annotatron's idea of an Asset, stored in a Corpus.
+        BinaryAssetDescription objects don't have the content attached.
+    """
+    def __init__(self, mime_type, type_description: BinaryAssetKind, copyright, checksum,
+                 uploader_id: int = 0, date_uploaded=datetime.datetime.now(), id=None,
+                 metadata=None):
+        self.mime_type = mime_type
+        self.type_description = type_description
+        self.copyright = copyright
+        self.checksum = checksum
+        self.uploader_id = uploader_id
+        self.date_uploaded = date_uploaded
+        self.metadata = metadata
+        self.id = id
+
+    MAP = {
+        "userIdWhoUploaded": "uploader_id",
+        "dateUploaded": ("date_uploaded", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "copyrightAndUsageRestrictions": "copyright",
+        "mimeType": "mime_type",
+        "typeDescription": ("type_description", lambda x: BinaryAssetKind(x), lambda x: x.value)
+    }
+
+
 class BinaryAsset(AnnotatronMixin):
     """
         Represents Annotatron's idea of a document, stored in a Corpus.
@@ -378,17 +404,17 @@ class BinaryAsset(AnnotatronMixin):
     """
 
     def __init__(self, content: bytes, mime_type, type_description: BinaryAssetKind, copyright, checksum,
-                 uploader_id: int = 0, date_uploaded=datetime.datetime.now(), id: int = 0,
+                 uploader_id: int = 0, date_uploaded=datetime.datetime.now(), id = None,
                  metadata=None):
         self.content = content
-        self.mime_type = mime_type
-        self.type_description = type_description
+        self.metadata = metadata
+        self.date_uploaded = date_uploaded
         self.copyright = copyright
         self.checksum = checksum
+        self.mime_type = mime_type
+        self.type_description = type_description
         self.uploader_id = uploader_id
-        self.date_uploaded = date_uploaded
         self.id = id
-        self.metadata = metadata
 
     MAP = {
         "userIdWhoUploaded": "uploader_id",
