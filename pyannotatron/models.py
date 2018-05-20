@@ -334,32 +334,43 @@ class AssetCorpusLink(AnnotatronMixin):
 
 class Assignment(AnnotatronMixin):
 
-    def __init__(self, user_id: int, question_id: int, created=datetime.datetime.now(),
-                 assigned_reviewer_id: int = 0, actual_reviewer_id: int = None,
-                 completed=None, reviewed=None, annotator_notes: str = None, reviewer_notes: str = None,
-                 original_annotation_id: int = None, corrected_annotation_id: int = None
-                 ):
-        self.user_id = user_id
-        self.question_id = question_id
+    def __init__(self, assets,  assigned_annotator_id: int,
+                 question: AbstractQuestion,
+                 assigned_user_id: int=None,
+                 response: AbstractAnnotation=None,
+                 assigned_reviewer_id: int = 0,
+                 created=datetime.datetime.now(),
+                 completed=None,
+                 reviewed=None,
+                 annotator_notes=None,
+                 reviewer_notes=None):
+        self.assets = assets
+        self.assigned_annotator_id = assigned_annotator_id
+        self.assigned_user_id = assigned_user_id
+        self.question = question
+        self.response = response
         self.created = created
         self.assigned_reviewer_id = assigned_reviewer_id
-        self.actual_reviewer_id = actual_reviewer_id
         self.completed = completed
         self.reviewed = reviewed
-        self.annotator_nots = annotator_notes
+        self.annotator_notes = annotator_notes
         self.reviewer_notes = reviewer_notes
-        self.original_annotation_id = original_annotation_id
-        self.corrected_annotation_id = corrected_annotation_id
 
     MAP = {
-        "userId": "user_id",
+        "assignedAnnotatorId": "assigned_annotator_id",
+        "assignedUserId": "assigned_user_id",
         "questionId": "question_id",
         "assignedReviewerId": "assigned_reviewer_id",
-        "actualReviewerId": "assigned_reviewer_id",
         "annotatorNotes": "annotator_notes",
         "reviewerNotes": "reviewer_notes",
         "originalAnnotationId": "original_annotation_id",
         "correctedAnnotationId": "corrected_annotation_id",
+        "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "updated": ("updated", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "completed":("completed", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "reviewed":("reviewed", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
+        "question": ("question", lambda x: Question.from_json(x), lambda x: x.to_json()),
+        "response": ("response", lambda x: Annotation.from_json(x), lambda x: x.to_json())
     }
 
 
