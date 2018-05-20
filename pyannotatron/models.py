@@ -65,20 +65,21 @@ class QuestionKind(Enum):
 
 class AbstractQuestion:
     def __init__(self, created: datetime.datetime, summary_code: str, human_prompt: str, kind: QuestionKind,
-                 annotation_instructions=None, detailed_annotation_instructions=None):
+                 annotation_instructions=None, detailed_annotation_instructions=None, assets=None):
         self.created = created
         self.summary_code = summary_code
         self.human_prompt = human_prompt
         self.kind = kind
         self.annotation_instructions = annotation_instructions
         self.detailed_annotation_instructions = detailed_annotation_instructions
+        self.assets = assets
 
 
 class MultipleChoiceQuestion(AbstractQuestion):
     def __init__(self, created: datetime.datetime, summary_code: str, human_prompt: str, kind: QuestionKind,
-                 choices: list, annotation_instructions=None, detailed_annotation_instructions=None):
+                 choices: list, annotation_instructions=None, detailed_annotation_instructions=None, assets=None):
         super().__init__(created, summary_code, human_prompt, kind, annotation_instructions,
-                         detailed_annotation_instructions)
+                         detailed_annotation_instructions, assets)
         self.choices = choices
 
     MAP = {
@@ -102,8 +103,8 @@ class MultipleChoiceQuestion(AbstractQuestion):
 
 class TimeSeriesRangeQuestion(AbstractQuestion):
     def __init__(self, created: datetime.datetime, summary_code: str, human_prompt: str, kind: QuestionKind,
-                 annotation_instructions = None, detailed_annotation_instructions = None, can_overlap: bool = False):
-        super().__init__(created, summary_code, human_prompt, kind, annotation_instructions, detailed_annotation_instructions)
+                 annotation_instructions = None, detailed_annotation_instructions = None, can_overlap: bool = False, assets=None):
+        super().__init__(created, summary_code, human_prompt, kind, annotation_instructions, detailed_annotation_instructions, assets)
         self.can_overlap = can_overlap
 
     MAP = {
@@ -130,9 +131,9 @@ class TimeSeriesSegmentationQuestion(AbstractQuestion):
     def __init__(self, created: datetime.datetime, summary_code: str, human_prompt: str, kind: QuestionKind,
                  annotation_instructions=None, detailed_annotation_instructions=None,
                  maximum_segments: int = 0, minimum_segments: int = 0, segment_choices: list = [],
-                 free_form_allowed: bool = False,):
+                 free_form_allowed: bool = False, assets=None):
         super().__init__(created, summary_code, human_prompt, kind, annotation_instructions,
-                         detailed_annotation_instructions)
+                         detailed_annotation_instructions, assets)
         self.maximum_segments = maximum_segments
         self.minimum_segments = minimum_segments
         self.segment_choices = segment_choices
@@ -455,10 +456,9 @@ class Corpus:
     }
 
     def __init__(self, name, description=None, created=datetime.datetime.now(),
-                 copyright=None, id=0):
+                 copyright=None):
         self.name = name
         self.description = description
-        self.id = id
         self.copyright = copyright
         self.created = created
 

@@ -1,6 +1,6 @@
 from unittest import TestCase
 import datetime
-from pyannotatron import Corpus
+from pyannotatron.models import Corpus
 
 class TestCorpus(TestCase):
 

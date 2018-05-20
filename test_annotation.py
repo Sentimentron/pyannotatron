@@ -1,6 +1,6 @@
 from unittest import TestCase
-from pyannotatron import Annotation, TimeSeriesSegmentationAnnotation, TimeSeriesRangeAnnotation, GenericJSONAnnotation
-from pyannotatron import MultipleChoiceAnnotation, TextAnnotation, AnnotationKind, AnnotationSource
+from pyannotatron.models import Annotation, TimeSeriesSegmentationAnnotation, TimeSeriesRangeAnnotation, GenericJSONAnnotation
+from pyannotatron.models import MultipleChoiceAnnotation, TextAnnotation, AnnotationKind, AnnotationSource
 import datetime
 
 

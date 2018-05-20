@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pyannotatron import Question, MultipleChoiceQuestion, TimeSeriesSegmentationQuestion, TimeSeriesRangeQuestion, QuestionKind
+from pyannotatron.models import Question, MultipleChoiceQuestion, TimeSeriesSegmentationQuestion, TimeSeriesRangeQuestion, QuestionKind
 import datetime
 
 
@@ -13,7 +13,8 @@ class TestQuestion(TestCase):
             "kind": "MultipleChoiceQuestion",
             "annotationInstructions": "Select the best match.",
             "detailedAnnotationInstructions": "If unsure, write a note explaining why",
-            "choices": ["positive", "negative"]
+            "choices": ["positive", "negative"],
+            "assets": [99199291, 1132231]
         }
         result = Question.from_json(input_json)
         self.assertEqual(type(result), MultipleChoiceQuestion)
@@ -23,6 +24,8 @@ class TestQuestion(TestCase):
         self.assertEqual(result.kind, QuestionKind.MULTIPLE_CHOICE)
         self.assertEqual(result.annotation_instructions, "Select the best match.")
         self.assertEqual(result.detailed_annotation_instructions, "If unsure, write a note explaining why")
+        self.assertEqual(result.assets[0], 99199291)
+        self.assertEqual(result.assets[1], 1132231)
 
         output_json = result.to_json()
         self.assertDictEqual(input_json, output_json)
@@ -35,7 +38,8 @@ class TestQuestion(TestCase):
             "kind": "TimeSeriesRangeQuestion",
             "annotationInstructions": "Click between each word",
             "detailedAnnotationInstructions": "So much more to say",
-            "canOverlap": True
+            "canOverlap": True,
+            "assets": None,
         }
         result = Question.from_json(input_json)
         self.assertEqual(type(result), TimeSeriesRangeQuestion)
@@ -60,7 +64,8 @@ class TestQuestion(TestCase):
             "maximumSegments": 5,
             "minimumSegments": 1,
             "segmentChoices": ["hi", "world"],
-            "freeFormAllowed": True
+            "freeFormAllowed": True,
+            "assets": None,
         }
         result = Question.from_json(input_json)
 

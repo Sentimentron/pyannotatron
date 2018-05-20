@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pyannotatron import BinaryAsset, BinaryAssetKind, AssetCorpusLink
+from pyannotatron.models import BinaryAsset, BinaryAssetKind, AssetCorpusLink
 import datetime
 import hashlib
 
