@@ -332,6 +332,17 @@ class AssetCorpusLink(AnnotatronMixin):
     }
 
 
+class AssignmentResponse(AnnotatronMixin):
+
+    def __init__(self, response:AbstractAnnotation=None, notes:str=None):
+        self.response = response
+        self.notes = notes
+
+    MAP = {
+        "response": ("response", lambda x: Annotation.from_json(x), lambda x: x.to_json())
+    }
+
+
 class Assignment(AnnotatronMixin):
 
     def __init__(self, assets,  assigned_annotator_id: int,
@@ -340,10 +351,7 @@ class Assignment(AnnotatronMixin):
                  response: AbstractAnnotation=None,
                  assigned_reviewer_id: int = 0,
                  created=datetime.datetime.now(),
-                 completed=None,
-                 reviewed=None,
-                 annotator_notes=None,
-                 reviewer_notes=None):
+                 completed=None):
         self.assets = assets
         self.assigned_annotator_id = assigned_annotator_id
         self.assigned_user_id = assigned_user_id
@@ -352,23 +360,17 @@ class Assignment(AnnotatronMixin):
         self.created = created
         self.assigned_reviewer_id = assigned_reviewer_id
         self.completed = completed
-        self.reviewed = reviewed
-        self.annotator_notes = annotator_notes
-        self.reviewer_notes = reviewer_notes
 
     MAP = {
         "assignedAnnotatorId": "assigned_annotator_id",
         "assignedUserId": "assigned_user_id",
         "questionId": "question_id",
         "assignedReviewerId": "assigned_reviewer_id",
-        "annotatorNotes": "annotator_notes",
-        "reviewerNotes": "reviewer_notes",
         "originalAnnotationId": "original_annotation_id",
         "correctedAnnotationId": "corrected_annotation_id",
         "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "updated": ("updated", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "completed":("completed", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
-        "reviewed":("reviewed", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "question": ("question", lambda x: Question.from_json(x), lambda x: x.to_json()),
         "response": ("response", lambda x: Annotation.from_json(x), lambda x: x.to_json())
     }
