@@ -349,7 +349,7 @@ class Assignment(AnnotatronMixin):
                  question: AbstractQuestion,
                  assigned_user_id: int=None,
                  response: AbstractAnnotation=None,
-                 assigned_reviewer_id: int = 0,
+                 assigned_reviewer_id: int = None,
                  created=datetime.datetime.now(),
                  completed=None):
         self.assets = assets
@@ -370,7 +370,6 @@ class Assignment(AnnotatronMixin):
         "correctedAnnotationId": "corrected_annotation_id",
         "created": ("created", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "updated": ("updated", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
-        "completed":("completed", lambda x: parse_json_date(x), lambda x: date_to_json(x)),
         "question": ("question", lambda x: Question.from_json(x), lambda x: x.to_json()),
         "response": ("response", lambda x: Annotation.from_json(x), lambda x: x.to_json())
     }
